@@ -1,6 +1,6 @@
 # Covid-19 Dashboard
 
-A Streamlit-powered interactive dashboard for visualizing and analyzing global COVID-19 data, enhanced with AI-generated insights using Google Gemini.
+A Streamlit-powered interactive dashboard for visualising and analysing global COVID-19 data, enhanced with AI-generated insights using Google Gemini.
 
 ---
 
