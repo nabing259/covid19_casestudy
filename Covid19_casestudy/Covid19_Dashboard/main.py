@@ -16,9 +16,9 @@ st.set_page_config(
 )
 
 # Load the COVID-19 recovered, confirmed, and death datasets from CSV files
-df_recover = pd.read_csv(r"C:\Users\Nabin\Desktop\Covid19_casestudy\covid-19-dataset\covid_19_recovered_v1.csv")
-df_confirm = pd.read_csv(r"C:\Users\Nabin\Desktop\Covid19_casestudy\covid-19-dataset\covid_19_confirmed_v1.csv")
-df_death = pd.read_csv(r"C:\Users\Nabin\Desktop\Covid19_casestudy\covid-19-dataset\covid_19_deaths_v1.csv")
+df_recover = pd.read_csv('https://github.com/nabing259/covid19_casestudy/blob/main/Covid19_casestudy/covid-19-dataset/covid_19_recovered_v1.csv')
+df_death = pd.read_csv('https://github.com/nabing259/covid19_casestudy/blob/main/Covid19_casestudy/covid-19-dataset/covid_19_deaths_v1.csv')
+df_confirm = pd.read_csv('https://github.com/nabing259/covid19_casestudy/blob/main/Covid19_casestudy/covid-19-dataset/covid_19_confirmed_v1.csv')
 
 # Initial preprocessing for recovered data: set first row as header, reset index, and drop old index column
 df_recover.columns = df_recover.iloc[0]
