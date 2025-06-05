@@ -14,8 +14,8 @@ Performed in-depth analysis on global COVID-19 datasets to understand the spread
 - Merged datasets (confirmed cases, deaths, recoveries) into a unified time-series format.
 - Cleaned and preprocessed data to handle missing values and anomalies.
 - Computed monthly and daily aggregates per country.
-- Analyzed recovery and death rates, and visualized waves of infection.
-- Created visualizations using `matplotlib` and `plotly` to show:
+- Analysed recovery and death rates, and visualised waves of infection.
+- Created visualisations using `matplotlib` and `plotly` to show:
   - Daily/Monthly new cases
   - Recovery vs Death comparison
   - Top 25 countries per metric
@@ -28,7 +28,7 @@ Developed a responsive and interactive COVID-19 dashboard to make the insights m
 
 ### 🛠️ Features:
 - Country-wise statistics for Confirmed, Deaths, and Recoveries.
-- Monthly summary charts for top 25 affected countries.
+- Monthly summary charts for the top 25 affected countries.
 - Line and stacked bar charts using `plotly`.
 - Metric selector and interactive components.
 - Display of pandemic waves and trend breakdowns.
