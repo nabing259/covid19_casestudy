@@ -106,11 +106,11 @@ df_de = df_death_melt.groupby([df_death_melt.index, 'Country/Region']).agg(
     }
 ).reset_index()
 
-# --- Merge Lat/Long columns from recovered data into confirmed and death dataframes ---
+#  Merge Lat/Long columns from recovered data into confirmed and death dataframes 
 df[['Lat', 'Long']] = df_re[['Lat', 'Long']].values
 df_de[['Lat', 'Long']] = df_re[['Lat', 'Long']].values
 
-# --- Merge confirmed, recovered, and death dataframes on Country/Region, Lat, Long, and Date ---
+#  Merge confirmed, recovered, and death dataframes on Country/Region, Lat, Long, and Date 
 x = df.merge(df_re, on=['Country/Region', 'Lat', 'Long', 'Date'], how='outer')
 merge_df = x.merge(df_de, on=['Country/Region', 'Lat', 'Long', 'Date'], how='outer')
 
@@ -125,21 +125,19 @@ def compute_features(df):
     df['7Day_Recover'] = df['Single_Recover'].rolling(window=7).mean()
     return df
 
-# --- Apply feature engineering to each country and reset index ---
+#  Apply feature engineering to each country and reset the index 
 complete_dataset = merge_df.groupby('Country/Region', group_keys=False).apply(compute_features).reset_index(drop=True)
 complete_dataset[['Lat', 'Long']] = complete_dataset[['Lat', 'Long']].astype('float64')
 complete_dataset['Date'] = pd.to_datetime(complete_dataset['Date'])
 
-# --- Standardize country names and import continent mapping library ---
+#  Standardise country names and import continent mapping library 
 complete_dataset['Country/Region'] = complete_dataset['Country/Region'].str.replace('US', 'USA')
 df_confirm_melt['Country/Region'] = df_confirm_melt['Country/Region'].str.replace('US', 'USA')
 
-# --- Helper function: map country name to continent name ---
+#  Helper function: map country name to continent name 
 def country_to_continent(country_name):
     try:
-        # Convert country name to ISO alpha-2 code (like 'IN', 'US')
         country_code = pc.country_name_to_country_alpha2(country_name)
-        # Convert ISO code to continent code (like 'AS', 'EU')
         continent_code = pc.country_alpha2_to_continent_code(country_code)
         # Map continent code to name
         continent_name = {
@@ -155,21 +153,21 @@ def country_to_continent(country_name):
     except:
         return 'Unknown'
 
-# --- Assign continent to each country in main and melted confirmed dataframes ---
+#  Assign continent to each country in main and melted confirmed dataframes 
 complete_dataset['Continent'] = complete_dataset['Country/Region'].apply(country_to_continent)
 df_confirm_melt['Province/State'].fillna('All Province', inplace=True)
 df_confirm_melt['Continent'] = df_confirm_melt['Country/Region'].apply(country_to_continent)
 
-# --- Add Month column for monthly aggregation ---
+#  Add Month column for monthly aggregation 
 complete_dataset['Month'] = complete_dataset['Date'].dt.to_period("M")
 
-# --- Create monthly dataframe: last record of each month per country ---
+#  Create monthly dataframe: last record of each month per country 
 monthly_df = complete_dataset.groupby(['Month', 'Country/Region']).tail(1)
 
-# --- Set index to Date for time-based slicing ---
+#  Set index to Date for time-based slicing 
 complete_dataset.set_index('Date', inplace=True)
 
-# --- Example: get data for a specific date and top 10 countries by Confirmed cases per continent ---
+#  Example: get data for a specific date and the top 10 countries by confirmed cases per continent 
 x = complete_dataset.loc['2021-5-29']
 top20_df = (
     x.groupby('Continent', group_keys=False)
@@ -188,21 +186,21 @@ gr_coun_date = monthly_confirm.groupby([monthly_confirm.index, 'Country/Region']
 gr_coun_date = gr_coun_date.reset_index().sort_values('Confirm', ascending=False)
 
 
-# --- Sidebar country selection ---
+#  Sidebar country selection 
 all_countries = complete_dataset['Country/Region'].unique()
 all_countries = np.insert(all_countries, 0, 'World')  # Add 'World' as the first option
 
 st.sidebar.title('Customizer')
 country = st.sidebar.selectbox('Choose the Country', options=all_countries)
 
-# --- Main title and label assignment for map highlighting ---
+#  Main title and label assignment for map highlighting 
 st.title(country + ' (Covid19) Dashboard')
 complete_dataset['label'] = complete_dataset['Country/Region'].apply(lambda x: x if x == country else '')
 
-# --- Set index for monthly_df for easier time-based slicing ---
+# Set index for monthly_df for easier time-based slicing 
 monthly_df.set_index('Date', inplace=True)
 
-# --- Set default map center coordinates ---
+#  Set default map center coordinates 
 center_lat = 0
 center_lon = 0
 if country != 'World':
@@ -218,14 +216,14 @@ to = st.sidebar.date_input('To', value=max_date)
 from2 = pd.to_datetime(from1)
 to1 = pd.to_datetime(to)
 
-# --- Format dates for display ---
+#  Format dates for display 
 start = from1.strftime('%Y-%m-%d')
 end = to.strftime('%Y-%m-%d')
 
-# --- Sidebar status selection ---
+#  Sidebar status selection 
 Status = st.sidebar.selectbox('Choose Status', options=['Confirm', 'Recover', 'Death', 'Overall Analysis'])
 
-# --- Display current analysis selection at the top of the page ---
+#  Display current analysis selection at the top of the page 
 st.markdown(
     f"""
     <div style="display: flex; justify-content: space-between; width: 100%; font-size: 18px;">
@@ -237,7 +235,7 @@ st.markdown(
 )
 st.divider()
 
-# --- Helper function to show death and recovery rates as metrics ---
+#  Helper function to show death and recovery rates as metrics 
 def RateMetric(from1, to, df_rate, country):
     if country != 'World':
         death_rate = round((df_rate.loc[to]['Death'] / df_rate.loc[to]['Confirm']) * 100, 2)
@@ -488,58 +486,58 @@ def Rate(from1, to, df, country, status):
         val = (df[status].sum() / df['Confirm'].sum()) * 100
     MetricDesign((val), '', status + '_Rate of the ' + country+'(%)')
 
-# --- Create two main tabs: Data Dashboard and Data AI ---
+#  Create two main tabs: Data Dashboard and Data AI 
 tab1, tab2 = st.tabs(['Data Dashboard', 'Data AI'])
 
 with tab1:
-    # --- If user selects 'Overall Analysis' status ---
+    #  If user selects 'Overall Analysis' status 
     if Status == 'Overall Analysis':        
         if country == 'World':
-            # --- Filter data for selected date range ---
+            #  Filter data for selected date range 
             df = complete_dataset
             mask = (complete_dataset.index >= from2) & (complete_dataset.index <= to1)
             df1 = complete_dataset[mask]
-            # --- Show main metrics for the world ---
+            #  Show main metrics for the world 
             MetricStruct(from2, to1, df1, Status, country)
-            # --- Get data for the last selected date ---
+            #  Get data for the last selected date 
             df2 = df1.loc[to1]
-            # --- Get top 10 countries by confirmed cases ---
+            #  Get top 10 countries by confirmed cases 
             top_10 = df2.sort_values('Confirm', ascending=False).head(10)['Country/Region'].unique()
-            # --- Filter data for top 10 countries ---
+            #  Filter data for top 10 countries 
             line_df = df[df['Country/Region'].isin(top_10)]
             grouped = df1.loc[to1]
-            # --- Prepare monthly bar chart data for top 10 countries ---
+            #  Prepare monthly bar chart data for top 10 countries 
             bar_df = line_df.loc[pd.date_range(from2, to1, freq='31D')].sort_values('Confirm', ascending=False)
             
-            # --- Define color scale for map visualization ---
+            # Define color scale for map visualisation 
             color_scale = [
                 [0.0, "green"],
                 [0.25, "yellow"],
                 [0.5, "orange"],
                 [1.0, "red"]
             ]
-            # --- Show map and rates side by side ---
+            #  Show map and rates side by side 
             col1, col2 = st.columns([3, 1])
             with col1:
                 with st.spinner("Generating map..."):
                     geoScatter(grouped, Status, country, color_scale, center_lon, center_lat)
             with col2:
                 st.subheader('')
-                # --- Show death and recovery rates ---
+                #  Show death and recovery rates 
                 Rate(from2, to1, df, country, 'Death')
                 st.markdown("<br>", unsafe_allow_html=True)
                 Rate(from2, to1, df, country, 'Recover')
                 st.markdown("<br>", unsafe_allow_html=True)
-                # --- Calculate rates for each country ---
+                #  Calculate rates for each country 
                 df_rate = df.groupby('Country/Region')[['Confirm', 'Recover', 'Death']].sum()
                 df_rate['Death_rate'] = round((df_rate['Death'] / df_rate['Confirm']) * 100, 2)
                 df_rate['Recover_rate'] = round((df_rate['Recover'] / df_rate['Confirm']) * 100, 2)
                 highest_death_rate = df_rate['Death_rate'].max()
-                # --- Show metrics for highest/lowest rates ---
+                #  Show metrics for highest/lowest rates 
                 RateMetric(from2, to1, df_rate, country) 
                 st.markdown("<br>", unsafe_allow_html=True)           
                 
-            # --- Donut chart and highest cases metrics ---
+            #  Donut chart and highest cases metrics 
             col1, col2 = st.columns([3, 1])  
             with col1:
                 st.subheader('Case Status Overview')
@@ -547,7 +545,7 @@ with tab1:
             with col2:
                 HighestCases(df1, country)
                 
-            # --- Bar chart for top 10 countries (Confirm, Recover, Death) ---
+            #  Bar chart for top 10 countries (Confirm, Recover, Death) 
             col1, col2 = st.columns([3, 1])
             with col1:
                 st.subheader('Top 10 Countries Total_Confirm vs Total_Recovery vs Total_Death')
@@ -558,7 +556,7 @@ with tab1:
                     barmode='group'
                 )
                 st.plotly_chart(fig)
-            # --- Area plot for monthly recovery rates of top 10 countries ---
+            #  Area plot for monthly recovery rates of top 10 countries 
             data = df1[df1['Country/Region'].isin(top_10)][['Country/Region', 'Recovery_rates']]
             data_new = data.loc[pd.date_range(from2, to1, freq='35D')]
             col1, col2 = st.columns([1, 3])
@@ -572,7 +570,7 @@ with tab1:
                 )
                 st.plotly_chart(fig)
             with col1:
-                # --- Show metrics for highest recovery and death rates among countries with high cases ---
+                #  Show metrics for the highest recovery and death rates among countries with high cases 
                 data = df1[df1['Confirm'] > 3000000]
                 data1 = df1[df1['Death'] > 100000]
                 gr = data.groupby('Country/Region')['Recovery_rates'].mean().sort_values(ascending=False).head(1)
@@ -587,23 +585,23 @@ with tab1:
                 MetricDesign( round(highest_death_rate,2),highest_death_country, ' Highest Death Rate (%)')            
 
         else:   
-            # --- Country-specific analysis for 'Overall Analysis' ---
+            #  Country-specific analysis for 'Overall Analysis' 
             df = complete_dataset
             mask = (complete_dataset.index >= from2) & (complete_dataset.index <= to1)
             df1 = complete_dataset[mask]
             mask1 = (monthly_df.index >= from2) & (monthly_df.index <= to1)
             grouped = df1.loc[to1]
             df1 = df1[df1['Country/Region'] == country]
-            # --- Monthly data for selected country ---
+            #  Monthly data for the selected country 
             df1_month = df1.loc[pd.date_range(from2, to1, freq=pd.Timedelta(days=35))].sort_index(ascending=False)
             monthly_df1 = monthly_df[mask1]
             monthly_df1 = monthly_df1[monthly_df1['Country/Region'] == country]
-            # --- Province/state-level data for the last selected date ---
+            #  Province/state-level data for the last selected date 
             new_df = df_confirm_melt.loc[to1]
             df_new = new_df[new_df['Country/Region'] == country]
             no_of_province = len(df_new)
             
-            # --- Show main metrics for the country ---
+            #  Show main metrics for the country 
             MetricStruct(from2, to1, df, Status, country)
             col1, col2 = st.columns([3, 1])
             color_scale = [
@@ -618,7 +616,7 @@ with tab1:
             with col2:
                 st.header('')
                 RateMetric(from2, to1, df1, country)
-            # --- Pie chart for province/state breakdown if only one province ---
+            #  Pie chart for province/state breakdown if only one province 
             col1,col2 = st.columns([3,1])
             with col1:
                 Confirm = df1.loc[to1]['Confirm']
@@ -631,7 +629,7 @@ with tab1:
                 fig = px.pie(df_donut, names='Category', values='Values', hole=0.5)
                 st.header('Death vs Recover vs Confirm  ')
                 st.plotly_chart(fig)
-            # --- Line chart for Confirm, Recover, Death over time ---
+            #  Line chart for Confirm, Recover, Death over time 
             col1, col2 = st.columns([3, 1])
             with col1:
                 fig = px.line(
@@ -641,7 +639,7 @@ with tab1:
                 )
                 st.header('Daily Line Chart for ' + country)
                 st.plotly_chart(fig)
-            # --- Bar chart for Confirm, Recover, Death over time ---
+            #  Bar chart for Confirm, Recover, Death over time 
             col1, col2 = st.columns([3, 1])
             with col1:
                 fig = px.bar(
@@ -651,7 +649,7 @@ with tab1:
                 )
                 st.header('Monthly Bar Chart for ' + country)
                 st.plotly_chart(fig)
-            # --- Line chart for daily new cases (Single_Confirm, Single_Recover, Single_Death) ---
+            #  Line chart for daily new cases (Single_Confirm, Single_Recover, Single_Death) 
             col1, col2 = st.columns([3, 1])
             with col1:
                 fig = px.line(
@@ -807,16 +805,20 @@ with tab1:
                         max_province_df = ld[ld[Status] == ld[Status].max()]
                         max_province_name = max_province_df['Province/State'].values[0]
                         num = max_province_df[Status].values[0]
+                        
                         Single_day_confirm = new_df[new_df['Single_Confirm']==new_df['Single_Confirm'].max()]['Single_Confirm'].values[0]
                         Single_day_confirm_country = new_df[new_df['Single_Confirm']==new_df['Single_Confirm'].max()]['Province/State'].values[0]
+                        
                         MetricDesign(num,max_province_name,'Maximum '+ Status)
                         MetricDesign(Single_day_confirm,Single_day_confirm_country,'Single_day Maximum Spike ')
                     if Status == 'Recover':
                         max_province_df = ld[ld[Status] == ld[Status].max()]
                         max_province_name = max_province_df['Province/State'].values[0]
                         num = max_province_df[Status].values[0]
+                        
                         Single_day_confirm = new_df[new_df['Single_Recover']==new_df['Single_Recover'].max()]['Single_Recover'].values[0]
                         Single_day_recover_country = new_df[new_df['Single_Recover']==new_df['Single_Recover'].max()]['Province/State'].values[0]
+                        
                         MetricDesign(num,max_province_name,'Maximum '+ Status)
                         MetricDesign(Single_day_confirm,Single_day_recover_country,'Single_day Maximum Spike '+ Status)
                     if Status == 'Death':
@@ -835,7 +837,6 @@ with tab1:
                     df1,
                     x=df1.index,
                     y=Status,
-                    # color = 'Country/Region',
                 )
                 st.header('Daily Line Chart for ' + country)
                 st.plotly_chart(fig)
@@ -847,9 +848,6 @@ with tab1:
                     df1_month,
                     x=df1_month.index,
                     y=Status,
-                    # color = 'Country/Region',
-                    # animation_frame = 'level_0',
-                    # animation_group = 'Confirm'
                 )
                 st.header('Monthly Bar Chart for ' + country)
                 st.plotly_chart(fig)
@@ -860,7 +858,7 @@ df_selected = complete_dataset[mask]
 if country != "World":
     df_selected = df_selected[df_selected['Country/Region'] == country]
 
-# Get the last day in the selected range for summary statistics
+# Get the last day in the selected range for summary stats
 try:
     last_day = df_selected.loc[to1]
 except:
