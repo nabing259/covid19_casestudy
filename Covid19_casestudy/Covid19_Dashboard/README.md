@@ -13,7 +13,6 @@ A Streamlit-powered interactive dashboard for visualising and analysing global C
   - [Data Sources](#data-sources)
   - [Setup \& Installation](#setup--installation)
   - [Usage](#usage)
-  - [Project Structure](#project-structure)
   - [Key Functionalities](#key-functionalities)
   - [AI Integration](#ai-integration)
 
@@ -21,18 +20,18 @@ A Streamlit-powered interactive dashboard for visualising and analysing global C
 
 ## Project Overview
 
-This dashboard provides a comprehensive, interactive view of COVID-19 cases, recoveries, and deaths worldwide. Users can select countries, date ranges, and case types to explore trends, spikes, and regional breakdowns. The dashboard also features an AI assistant that summarizes the data and answers user questions in plain language.
+This dashboard provides a comprehensive, interactive view of COVID-19 cases, recoveries, and deaths worldwide. Users can select countries, date ranges, and case types to explore trends, spikes, and regional breakdowns. The dashboard also features an AI assistant that summarises the data and answers user questions in plain language.
 
 ---
 
 ## Features
 
-- **Interactive Visualizations:** Maps, line/bar/area charts, sunburst, and donut charts.
+- **Interactive Visualisations:** Maps, line/bar/area charts, sunburst, and donut charts.
 - **Country & Date Selection:** Filter data by country and custom date ranges.
-- **Status Selection:** Analyze Confirmed, Recovered, Death, or Overall data.
+- **Status Selection:** Analyse Confirmed, Recovered, Death, or Overall data.
 - **Key Metrics:** Total cases, recoveries, deaths, active cases, rates, spikes, and more.
 - **Regional Breakdown:** Province/state-level analysis for selected countries.
-- **AI Assistant:** Summarizes data and answers user questions using Google Gemini.
+- **AI Assistant:** Summarises data and answers user questions using Google Gemini.
 - **Responsive UI:** Built with Streamlit for easy web deployment.
 
 ---
@@ -96,27 +95,6 @@ The dashboard uses publicly available datasets:
 
 ---
 
-## Project Structure
-
-```
-Covid19_Dashboard/
-├── data/
-│   └── README.md
-├── src/
-│   ├── main.py
-│   └── utils.py
-├── requirements.txt
-├── pyproject.toml
-└── README.md
-```
-
-- **data/**: Documentation about the datasets.
-- **src/main.py**: Main Streamlit app.
-- **src/utils.py**: Utility functions.
-- **requirements.txt**: Python dependencies.
-- **pyproject.toml**: Project metadata and dependencies.
-
----
 
 ## Key Functionalities
 
