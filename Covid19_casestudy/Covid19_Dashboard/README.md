@@ -45,8 +45,6 @@ The dashboard uses publicly available datasets:
 - [COVID-19 Deaths](https://raw.githubusercontent.com/nabing259/covid19_casestudy/refs/heads/main/Covid19_casestudy/covid-19-dataset/covid_19_deaths_v1.csv)
 - [COVID-19 Recoveries](https://raw.githubusercontent.com/nabing259/covid19_casestudy/refs/heads/main/Covid19_casestudy/covid-19-dataset/covid_19_recovered_v1.csv)
 
-See [Covid19_Dashboard/data/README.md](Covid19_Dashboard/data/README.md) for more details on data formats and preprocessing.
-
 ---
 
 ## Setup & Installation
@@ -93,7 +91,7 @@ See [Covid19_Dashboard/data/README.md](Covid19_Dashboard/data/README.md) for mor
      - Country (or "World" for global view)
      - Date Range
      - Status (Confirmed, Recovered, Death, Overall Analysis)
-   - Explore the main dashboard for visualizations and metrics.
+   - Explore the main dashboard for visualisations and metrics.
    - Switch to the Data AI tab for AI-generated summaries or to ask questions about the data.
 
 ---
@@ -123,7 +121,7 @@ Covid19_Dashboard/
 ## Key Functionalities
 
 - **Data Loading & Preprocessing:** Loads CSVs directly from GitHub, cleans, and merges them for analysis.
-- **Visualization:** Uses Plotly for interactive charts and maps.
+- **Visualisation:** Uses Plotly for interactive charts and maps.
 - **Metrics Calculation:** Computes totals, rates, spikes, moving averages, and more.
 - **Regional Analysis:** Province/state breakdown for countries with sub-regions.
 - **AI Assistant:** Uses Google Gemini to generate summaries and answer user questions.
