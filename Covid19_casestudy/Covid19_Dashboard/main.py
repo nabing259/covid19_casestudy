@@ -117,9 +117,9 @@ merge_df = x.merge(df_de, on=['Country/Region', 'Lat', 'Long', 'Date'], how='out
 #  compute daily and 7-day rolling new cases for each metric 
 def compute_features(df):
     df = df.sort_values('Date').copy()
-    df['Single_Death'] = df['Death'].diff()
-    df['Single_Confirm'] = df['Confirm'].diff()
-    df['Single_Recover'] = df['Recover'].diff()
+    df['Single_Death'] = df['Death'].diff().fillna(0).clip(lower=0)
+    df['Single_Confirm'] = df['Confirm'].diff().fillna(0).clip(lower=0)
+    df['Single_Recover'] = df['Recover'].diff().fillna(0).clip(lower=0)
     df['7Day_Death'] = df['Single_Death'].rolling(window=7).mean()
     df['7Day_Confirm'] = df['Single_Confirm'].rolling(window=7).mean()
     df['7Day_Recover'] = df['Single_Recover'].rolling(window=7).mean()
