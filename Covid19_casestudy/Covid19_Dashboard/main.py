@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import numpy as np
+from datetime import date
 import plotly.express as px
 import matplotlib.pyplot as plt
 import pycountry_convert as pc
@@ -209,10 +210,14 @@ if country != 'World':
     center_lat = selected_row['Lat']
     center_lon = selected_row['Long']
 
-# --- Sidebar date selection ---
+# Sidebar date selection 
 st.sidebar.write('Select a date')
-from1 = st.sidebar.date_input('From', value=min_date)
-to = st.sidebar.date_input('To', value=max_date)
+# Restrict the date range
+min_date = date(2020, 1, 22)
+max_date = date(2021, 5, 29)
+
+from1 = st.sidebar.date_input("From", min_value=min_date, max_value=max_date, value=min_date)
+to = st.sidebar.date_input("To", min_value=min_date, max_value=max_date, value=max_date)
 from2 = pd.to_datetime(from1)
 to1 = pd.to_datetime(to)
 
@@ -713,7 +718,6 @@ with tab1:
                 df_val,
                 x = df_val.index,
                 y = Status
-
             )
             st.plotly_chart(fig)
             # Line chart for the top 10 countries
