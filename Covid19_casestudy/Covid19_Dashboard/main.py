@@ -131,10 +131,6 @@ complete_dataset = merge_df.groupby('Country/Region', group_keys=False).apply(co
 complete_dataset[['Lat', 'Long']] = complete_dataset[['Lat', 'Long']].astype('float64')
 complete_dataset['Date'] = pd.to_datetime(complete_dataset['Date'])
 
-#  Standardise country names and import continent mapping library 
-complete_dataset['Country/Region'] = complete_dataset['Country/Region'].str.replace('US', 'USA')
-df_confirm_melt['Country/Region'] = df_confirm_melt['Country/Region'].str.replace('US', 'USA')
-
 #  Helper function: map country name to continent name 
 def country_to_continent(country_name):
     try:
@@ -878,7 +874,13 @@ except:
     last_day = df_selected.iloc[-1]
 
 # Calculate total confirmed, recovered, and death cases
-total_confirm = int(last_day['Confirm'].sum()) if country == "World" else int(last_day['Confirm'])
+if country == "World":
+    total_confirm = last_day['Confirm'].sum()
+else:
+    total_confirm = last_day['Confirm']
+
+total_confirm = 0 if pd.isna(total_confirm) else int(total_confirm)
+total_recover = int(last_day['Recover'].sum()) if country == "World" else int(last_day['Recover'])
 total_recover = int(last_day['Recover'].sum()) if country == "World" else int(last_day['Recover'])
 total_death = int(last_day['Death'].sum()) if country == "World" else int(last_day['Death'])
 
