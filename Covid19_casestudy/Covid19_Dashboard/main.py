@@ -696,7 +696,7 @@ with tab1:
                 SunPlot(grouped, Status)
             with col2:
                 st.header('')
-                # Find continent with maximum cases for the selected status
+                # Find the continent with the maximum cases for the selected status
                 g = grouped.groupby('Continent')[Status].sum().sort_values(ascending=False).head(1)
                 h = grouped.groupby('Continent')[Status].sum().sort_values().head(1)
                 continent_case = g.values[0]
@@ -706,8 +706,17 @@ with tab1:
                 continent_name2 = h.index[0]
                 st.markdown("<br>", unsafe_allow_html=True)
                 MetricDesign(continent_case1,continent_name2,  'Minimum ' + Status)
+            # Plot over time cases
+            df_val = df1.groupby(df1.index)[['Confirm', 'Death', 'Recover']].sum()
+            st.subheader( Status + ' cases over the time')
+            fig = px.bar(
+                df_val,
+                x = df_val.index,
+                y = Status
 
-            # Line chart for top 10 countries
+            )
+            st.plotly_chart(fig)
+            # Line chart for the top 10 countries
             st.subheader('Top 10 countries daily ' + Status + ' cases Line Chart')
             fig = px.line(
                 line_df,
@@ -728,7 +737,7 @@ with tab1:
             st.plotly_chart(fig)        
 
         else:   
-            # Filter main DataFrame for selected date range and country
+            # Filter the main DataFrame for the selected date range and country
             df = complete_dataset
             mask = (complete_dataset.index >= from2) & (complete_dataset.index <= to1)
             df1 = complete_dataset[mask]
@@ -760,7 +769,7 @@ with tab1:
                     ld = new_df.loc[to1]
                 new_df['Single_Death']=new_df.groupby('Province/State')[Status].diff().fillna(0)
             df_new = new_df[new_df['Country/Region']==country]
-            # Count number of provinces/states for the country
+            # Count the number of provinces/states for the country
             no_of_province = len(df_new['Province/State'].unique())
             
             # Show main metrics for the selected country and status
@@ -830,7 +839,7 @@ with tab1:
                         MetricDesign(num,max_province_name,'Maximum '+ Status)
                         MetricDesign(Single_day_death,Single_day_death_country,'Single_day Maximum Spike '+ Status)
 
-                # Plot daily line chart for the selected country and status
+                # Daily line chart for the selected country and status
             col1, col2 = st.columns([3, 1])
             with col1:
                 fig = px.line(
@@ -838,10 +847,10 @@ with tab1:
                     x=df1.index,
                     y=Status,
                 )
-                st.header('Daily Line Chart for ' + country)
+                st.header(Status +'cases over the time for ' + country)
                 st.plotly_chart(fig)
 
-            # Plot monthly bar chart for the selected country and status
+            # Moonthly bar chart for the selected country and status
             col1, col2 = st.columns([3, 1])
             with col1:
                 fig = px.bar(
@@ -849,7 +858,7 @@ with tab1:
                     x=df1_month.index,
                     y=Status,
                 )
-                st.header('Monthly Bar Chart for ' + country)
+                st.header('Monthly cumulative '+Status +' cases for ' + country)
                 st.plotly_chart(fig)
 
 # Filter the main DataFrame for the selected date range
