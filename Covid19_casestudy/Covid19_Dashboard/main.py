@@ -558,7 +558,7 @@ with tab1:
                 st.plotly_chart(fig)
             #  Area plot for monthly recovery rates of top 10 countries 
             data = df1[df1['Country/Region'].isin(top_10)][['Country/Region', 'Recovery_rates']]
-            data_new = data.loc[pd.date_range(from2, to1, freq='35D')]
+            data_new = data.loc[pd.date_range(from2, to1, freq='35D')].reset_index().rename(columns={'index':'Date'}).set_index('Date')
             col1, col2 = st.columns([1, 3])
             with col2:
                 st.subheader('Top 10 Countries Monthly Recovery Cases Area Plot')
@@ -674,7 +674,7 @@ with tab1:
             line_df = df[df['Country/Region'].isin(top_10)]
             grouped = df1.loc[to1]
             # Prepare bar chart data for top 10 countries (monthly)
-            bar_df = line_df.loc[pd.date_range(from2, to1, freq='31D')].sort_values('Confirm', ascending=False)
+            bar_df = line_df.loc[pd.date_range(from2, to1, freq='31D')].sort_values('Confirm', ascending=False).reset_index().rename(columns={'index':'Date'}).set_index('Date')
             # Get top 30 countries for extended line chart
             top_20 = df2.sort_values('Confirm', ascending=False).head(30)['Country/Region'].unique()
             line_df_30 = df[df['Country/Region'].isin(top_20)]
@@ -738,7 +738,7 @@ with tab1:
             grouped = df1.loc[to1]
             df1 = df1[df1['Country/Region'] == country]
             # Create a monthly DataFrame for the selected country
-            df1_month = df1.loc[pd.date_range(from2,to1,freq = pd.Timedelta(days = 35))].sort_index(ascending = False)
+            df1_month = df1.loc[pd.date_range(from2,to1,freq = pd.Timedelta(days = 35))].sort_index(ascending = False).reset_index().rename(columns={'index':'Date'}).set_index('Date')
             
             # Prepare province/state-level data for the selected status
             if Status =='Confirm':
